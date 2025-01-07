@@ -13,11 +13,11 @@ import {
 import { Link } from "react-router-dom";
 import axios from "axios"; 
 import TeamDropdown from "./TeamDropdown";
-import PeriodDropdown from "./PeriodDropdown";
-import StatisticCard from "./StatisticsCard";
+import PeriodDropdown from "../SpanDropdown/SpanDropdown";
+import StatisticCard from "../StatisticsCard/StatisticsCard";
 import TeamLogo from "../TeamLogo/TeamLogo";
-import ResultsTable from "./ResultsTable";
-import NextScheduledGame from "./NextScheduledGame";
+import ResultsTable from "../ResultsTable/ResultsTable";
+import NextScheduledGame from "../NextScheduledGame/NextScheduledGame";
 import FooterComponent from "../Footer/Footer";
 
 const StatsPage: React.FC = () => {
