@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Box,
   Flex,
   Grid,
-  Heading,
+  GridItem,
   Text,
-  Icon,
-  Spinner,
   VStack,
+  Icon,
+  useColorModeValue,
 } from "@chakra-ui/react";
-import { FaUser, FaChartLine, FaBaseballBall, FaClock } from "react-icons/fa";
 import axios from "axios";
+import { FaUser, FaChartLine, FaBaseballBall, FaClock } from "react-icons/fa";
 import TeamLogo from "../TeamLogo/TeamLogo";
 
-type Team = {
-  id: string;
+interface Team {
+  id: number;
   name: string;
   wins: number;
   losses: number;
@@ -25,159 +25,196 @@ type Team = {
     losses: number;
     era: number;
   };
-};
+}
 
-type GameData = {
+interface Game {
+  game_datetime: string;
   away_team: Team;
   home_team: Team;
-  game_datetime: string;
-};
+}
 
-type NextScheduledGameProps = {
-  teamId: string;
+interface NextScheduledGameProps {
+  teamId: number;
   fetchGame: boolean;
   onFetchComplete?: () => void;
-};
+}
 
-const NextScheduledGame: React.FC<NextScheduledGameProps> = ({
-  teamId,
-  fetchGame,
-  onFetchComplete,
-}) => {
-  const [gameData, setGameData] = useState<GameData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+interface NextScheduledGameState {
+  gameData: Game[] | null;
+  isLoading: boolean;
+  error: string | null;
+}
 
-  useEffect(() => {
-    if (fetchGame) {
-      fetchScheduledGame();
+class NextScheduledGame extends React.Component<
+  NextScheduledGameProps,
+  NextScheduledGameState
+> {
+  constructor(props: NextScheduledGameProps) {
+    super(props);
+    this.state = {
+      gameData: null,
+      isLoading: true,
+      error: null,
+    };
+  }
+
+  componentDidUpdate(prevProps: NextScheduledGameProps) {
+    if (!prevProps.fetchGame && this.props.fetchGame) {
+      this.fetchScheduledGame();
     }
-  }, [fetchGame]);
+  }
 
-  const fetchScheduledGame = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get<GameData[]>(
-        `http://127.0.0.1:5000/schedule/${teamId}`
+  fetchScheduledGame() {
+    const { teamId, onFetchComplete } = this.props;
+
+    this.setState({ isLoading: true, error: null });
+
+    axios
+      .get(`http://127.0.0.1:5000/schedule/${teamId}`)
+      .then((response) => {
+        const gameData = response.data;
+        this.setState({ gameData, isLoading: false });
+
+        if (onFetchComplete) {
+          onFetchComplete();
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        this.setState({
+          gameData: null,
+          isLoading: false,
+          error: "Failed to fetch scheduled game.",
+        });
+      });
+  }
+
+  render() {
+    const { gameData, isLoading, error } = this.state;
+
+    if (isLoading) {
+      return <Text>Loading...</Text>;
+    }
+
+    if (error) {
+      return <Text color="red.500">{error}</Text>;
+    }
+
+    if (gameData && gameData.length > 0) {
+      const scheduledGame = gameData[0];
+      const gameDate = new Date(scheduledGame.game_datetime);
+      const formattedDate = `${gameDate.toLocaleDateString()} ${gameDate.toLocaleTimeString()}`;
+
+      const cardBg = useColorModeValue("gray.700", "gray.800");
+      const textColor = useColorModeValue("white", "gray.200");
+
+      return (
+        <Grid templateColumns="repeat(12, 1fr)" gap={4}>
+          <GridItem colSpan={12}>
+            <Text fontSize="2xl" fontWeight="bold" textAlign="center" color={textColor}>
+              Next Game
+            </Text>
+          </GridItem>
+
+          <GridItem colSpan={12}>
+            <Box
+              bg={cardBg}
+              p={4}
+              borderRadius="md"
+              boxShadow="lg"
+              color={textColor}>
+              <Flex
+                justify="space-between"
+                align="center"
+                direction={{ base: "column", sm: "row" }}
+                mb={4}>
+                <Flex align="center">
+                  <TeamLogo teamId={scheduledGame.away_team.id} />
+                  <VStack align="start" ml={4}>
+                    <Text fontSize="lg" fontWeight="bold">
+                      {scheduledGame.away_team.name}
+                    </Text>
+                    <Text fontSize="sm">
+                      ({scheduledGame.away_team.wins}-{scheduledGame.away_team.losses})
+                    </Text>
+                  </VStack>
+                </Flex>
+                <Text fontSize="2xl" mx={4}>
+                  @
+                </Text>
+                <Flex align="center">
+                  <VStack align="end" mr={4}>
+                    <Text fontSize="lg" fontWeight="bold">
+                      {scheduledGame.home_team.name}
+                    </Text>
+                    <Text fontSize="sm">
+                      ({scheduledGame.home_team.wins}-{scheduledGame.home_team.losses})
+                    </Text>
+                  </VStack>
+                  <TeamLogo teamId={scheduledGame.home_team.id} />
+                </Flex>
+              </Flex>
+
+              <Flex justify="space-between" wrap="wrap" mb={4}>
+                {[
+                  {
+                    icon: FaUser,
+                    label: `${scheduledGame.away_team.probable_pitcher.name} (${scheduledGame.away_team.probable_pitcher.hand})`,
+                  },
+                  {
+                    icon: FaChartLine,
+                    label: `W-L: ${scheduledGame.away_team.probable_pitcher.wins}-${scheduledGame.away_team.probable_pitcher.losses}`,
+                  },
+                  {
+                    icon: FaBaseballBall,
+                    label: `ERA: ${scheduledGame.away_team.probable_pitcher.era}`,
+                  },
+                ].map((item, index) => (
+                  <VStack key={index} align="center" w="30%">
+                    <Icon as={item.icon} boxSize={6} />
+                    <Text fontSize="sm">{item.label}</Text>
+                  </VStack>
+                ))}
+
+                <Text fontSize="lg" mx={4} alignSelf="center">
+                  VS
+                </Text>
+
+                {[
+                  {
+                    icon: FaUser,
+                    label: `${scheduledGame.home_team.probable_pitcher.name} (${scheduledGame.home_team.probable_pitcher.hand})`,
+                  },
+                  {
+                    icon: FaChartLine,
+                    label: `W-L: ${scheduledGame.home_team.probable_pitcher.wins}-${scheduledGame.home_team.probable_pitcher.losses}`,
+                  },
+                  {
+                    icon: FaBaseballBall,
+                    label: `ERA: ${scheduledGame.home_team.probable_pitcher.era}`,
+                  },
+                ].map((item, index) => (
+                  <VStack key={index} align="center" w="30%">
+                    <Icon as={item.icon} boxSize={6} />
+                    <Text fontSize="sm">{item.label}</Text>
+                  </VStack>
+                ))}
+              </Flex>
+
+              <Flex justify="center">
+                <Text fontSize="sm">
+                  <Icon as={FaClock} mr={2} />
+                  {formattedDate}
+                </Text>
+              </Flex>
+            </Box>
+          </GridItem>
+        </Grid>
       );
-      if (response.data.length > 0) {
-        setGameData(response.data[0]);
-      } else {
-        setGameData(null);
-      }
-      if (onFetchComplete) {
-        onFetchComplete();
-      }
-    } catch (err) {
-      setError("Failed to fetch scheduled game.");
-    } finally {
-      setIsLoading(false);
     }
-  };
 
-  if (isLoading) {
-    return (
-      <Flex justifyContent="center" alignItems="center" height="100px">
-        <Spinner />
-      </Flex>
-    );
-  }
-
-  if (error) {
-    return (
-      <Flex justifyContent="center" alignItems="center">
-        <Text color="red.500">{error}</Text>
-      </Flex>
-    );
-  }
-
-  if (!gameData) {
     return null;
   }
-
-  const { away_team, home_team, game_datetime } = gameData;
-  const gameDate = new Date(game_datetime);
-  const formattedDate = `${gameDate.toLocaleDateString()} ${gameDate.toLocaleTimeString()}`;
-
-  return (
-    <VStack spacing={6} width="100%">
-      <Heading size="md" textAlign="center">
-        Next Game
-      </Heading>
-      <Box
-        borderWidth="1px"
-        borderRadius="lg"
-        p={4}
-        width="100%"
-        maxWidth="800px"
-        bg="gray.700"
-        color="white"
-      >
-        <Flex
-          justifyContent="space-between"
-          alignItems="center"
-          mb={4}
-          direction={{ base: "column", sm: "row" }}
-        >
-          <Flex alignItems="center">
-            <TeamLogo teamId={away_team.id} />
-            <Text fontSize="lg" ml={3}>
-              {away_team.name} ({away_team.wins}-{away_team.losses})
-            </Text>
-          </Flex>
-          <Text fontSize="xl" fontWeight="bold" mx={4}>
-            @
-          </Text>
-          <Flex alignItems="center">
-            <Text fontSize="lg" mr={3}>
-              {home_team.name} ({home_team.wins}-{home_team.losses})
-            </Text>
-            <TeamLogo teamId={home_team.id} />
-          </Flex>
-        </Flex>
-
-        <Grid templateColumns={{ base: "1fr", sm: "repeat(3, 1fr)" }} gap={4}>
-          <VStack align="center">
-            <Icon as={FaUser} boxSize={6} />
-            <Text>{away_team.probable_pitcher.name} ({away_team.probable_pitcher.hand})</Text>
-          </VStack>
-          <VStack align="center">
-            <Icon as={FaChartLine} boxSize={6} />
-            <Text>W-L: {away_team.probable_pitcher.wins}-{away_team.probable_pitcher.losses}</Text>
-          </VStack>
-          <VStack align="center">
-            <Icon as={FaBaseballBall} boxSize={6} />
-            <Text>ERA: {away_team.probable_pitcher.era}</Text>
-          </VStack>
-        </Grid>
-
-        <Text fontSize="lg" textAlign="center" my={4}>
-          VS
-        </Text>
-
-        <Grid templateColumns={{ base: "1fr", sm: "repeat(3, 1fr)" }} gap={4}>
-          <VStack align="center">
-            <Icon as={FaUser} boxSize={6} />
-            <Text>{home_team.probable_pitcher.name} ({home_team.probable_pitcher.hand})</Text>
-          </VStack>
-          <VStack align="center">
-            <Icon as={FaChartLine} boxSize={6} />
-            <Text>W-L: {home_team.probable_pitcher.wins}-{home_team.probable_pitcher.losses}</Text>
-          </VStack>
-          <VStack align="center">
-            <Icon as={FaBaseballBall} boxSize={6} />
-            <Text>ERA: {home_team.probable_pitcher.era}</Text>
-          </VStack>
-        </Grid>
-
-        <Flex justifyContent="center" mt={4}>
-          <Icon as={FaClock} mr={2} />
-          <Text>{formattedDate}</Text>
-        </Flex>
-      </Box>
-    </VStack>
-  );
-};
+}
 
 export default NextScheduledGame;
