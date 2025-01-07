@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import axios from "axios"; 
-import TeamDropdown from "./TeamDropdown";
+import TeamDropdown from "../TeamDropdown/TeamDropdown";
 import PeriodDropdown from "../SpanDropdown/SpanDropdown";
 import StatisticCard from "../StatisticsCard/StatisticsCard";
 import TeamLogo from "../TeamLogo/TeamLogo";
