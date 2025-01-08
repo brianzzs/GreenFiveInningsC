@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import {
+    Box,
     FormControl,
     FormLabel,
     Select,
-    MenuItemOption,
-    Box,
 } from "@chakra-ui/react";
 
 interface SpanDropdownProps {

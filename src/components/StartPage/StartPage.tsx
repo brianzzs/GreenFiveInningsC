@@ -14,7 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import TodaySchedule from "../TodaySchedule/TodaySchedule";
 import FooterComponent from "../Footer/Footer";
-import Bg from "../img/bg.jpg";
+import Bg from "../../img/bg.jpg";
 
 const StartPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
