@@ -110,6 +110,7 @@ const StartPage: React.FC = () => {
                         align="center"
                         overflowX="auto"
                         p="1rem"
+                        bg="#182223"
                     >
                         <TodaySchedule
                             placeholder={

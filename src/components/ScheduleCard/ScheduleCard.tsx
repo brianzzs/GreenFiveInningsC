@@ -71,9 +71,12 @@ const ScheduleCard = ({ GamesData }: TodayScheduleProps) => {
                         borderRadius="md"
                         shadow="md"
                         textAlign="center"
+                        bg={"#051635"}
                     >
                         <Flex direction={{ base: "column", md: "row" }} justify="space-between" mb={4}>
-                            <Card flexDirection={"row"} overflow={"hidden"} alignItems={"center"} maxW={"x1"}>
+                            <Card flexDirection={"row"} overflow={"hidden"} alignItems={"center"} maxW={"x1"}
+                                bg={"#051635"} fontStyle={"normal"} color={"#f5f5f5"} p={4} borderRadius={"md"}
+                                fontFamily={"Inter"} borderColor={"#f5f5f5"} borderWidth={0.5} boxShadow={"md"}>
                                 <VStack spacing={4}>
                                     <TeamLogo teamId={game.away_team.id} />
                                 </VStack>
@@ -100,20 +103,20 @@ const ScheduleCard = ({ GamesData }: TodayScheduleProps) => {
                                 </HStack>
                             </Card>
                         </Flex>
-                        <SimpleGrid columns={[0, 3]} >
+                        <SimpleGrid columns={[0, 3]} fontFamily={"Inter"} color={"#f5f5f5"} p={4} borderRadius={"md"} >
                             <Box alignSelf="center">
                                 <Text>
-                                    <MdPerson size="24px" style={{ float: "left" }}/>
+                                    <MdPerson size="24px" style={{ float: "left" }} />
                                     {game.away_team.probable_pitcher.name} ({game.away_team.probable_pitcher.hand})
                                 </Text>
                                 <Text>
-                                    <MdOutlineReceiptLong size="24px" style={{ float: "left" }}/>
+                                    <MdOutlineReceiptLong size="24px" style={{ float: "left" }} />
                                     W-L: {game.away_team.probable_pitcher.wins}-
                                     {game.away_team.probable_pitcher.losses}
                                 </Text>
 
                                 <Text>
-                                    <MdSportsBaseball size="24px" style={{ float: "left" }}/>
+                                    <MdSportsBaseball size="24px" style={{ float: "left" }} />
                                     ERA: {game.away_team.probable_pitcher.era}
                                 </Text>
                             </Box>
@@ -139,7 +142,8 @@ const ScheduleCard = ({ GamesData }: TodayScheduleProps) => {
                             </Box>
                         </SimpleGrid>
                         <Box mt={4}>
-                            <HStack justify="center" align="center" spacing={2} marginRight={12} mt={6}>
+                            <HStack justify="center" align="center" spacing={2} marginRight={12} mt={6}
+                                fontFamily={"Inter"} color={"#f5f5f5"}>
                                 <MdAccessTime size="20px" />
                                 <Text>{formattedDate}</Text>
                             </HStack>
