@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import {
     Box,
-    FormControl,
-    FormLabel,
     Select,
 } from "@chakra-ui/react";
+
+import { FormControl, FormLabel } from "@chakra-ui/react";
+
 
 interface SpanDropdownProps {
     onPeriodChange: (period: number) => void;

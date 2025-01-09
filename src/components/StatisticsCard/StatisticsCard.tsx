@@ -25,7 +25,7 @@ const StatisticCard: React.FC<StatisticCardProps> = ({ data, id, label }) => {
         <Box
             id={id}
             bg={backgroundColor}
-            color={textColor}
+            color="white"
             p={4}
             borderRadius="md"
             textAlign="center"
