@@ -108,7 +108,6 @@ const StartPage: React.FC = () => {
                     <Flex
                         justify="center"
                         align="center"
-                        bg="#2c323a"
                         overflowX="auto"
                         p="1rem"
                     >

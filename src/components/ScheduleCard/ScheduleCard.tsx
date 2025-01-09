@@ -60,16 +60,14 @@ const ScheduleCard = ({ GamesData }: TodayScheduleProps) => {
     }
 
     return (
-        <SimpleGrid columns={[2, 2, 3]} spacing={6} mt={4} p={4}>
+        <SimpleGrid columns={[1, 1, 3]} spacing={6} mt={4} p={4}>
             {GamesData.map((game, index) => {
                 const gameDate = new Date(game.game_datetime);
                 const formattedDate = gameDate.toLocaleString();
-
                 return (
                     <Box
                         key={index}
                         p={4}
-                        bg="#2c323a"
                         borderRadius="md"
                         shadow="md"
                         textAlign="center"
@@ -105,16 +103,19 @@ const ScheduleCard = ({ GamesData }: TodayScheduleProps) => {
                         <SimpleGrid columns={[0, 3]} >
                             <Box alignSelf="center">
                                 <Text>
-                                    <MdPerson size="24px" style={{ float: "left" }} />
+                                    <MdPerson size="24px" style={{ float: "left" }}/>
                                     {game.away_team.probable_pitcher.name} ({game.away_team.probable_pitcher.hand})
                                 </Text>
                                 <Text>
-                                    <MdOutlineReceiptLong size="24px" style={{ float: "left" }} />
+                                    <MdOutlineReceiptLong size="24px" style={{ float: "left" }}/>
                                     W-L: {game.away_team.probable_pitcher.wins}-
                                     {game.away_team.probable_pitcher.losses}
                                 </Text>
-                                <MdSportsBaseball size="24px" style={{ float: "left" }} />
-                                <Text>ERA: {game.away_team.probable_pitcher.era}</Text>
+
+                                <Text>
+                                    <MdSportsBaseball size="24px" style={{ float: "left" }}/>
+                                    ERA: {game.away_team.probable_pitcher.era}
+                                </Text>
                             </Box>
                             <Box alignSelf="center">
                                 <Text fontSize="lg" fontWeight="bold" alignSelf="center">
@@ -138,7 +139,7 @@ const ScheduleCard = ({ GamesData }: TodayScheduleProps) => {
                             </Box>
                         </SimpleGrid>
                         <Box mt={4}>
-                            <HStack justify="center" align="center">
+                            <HStack justify="center" align="center" spacing={2} marginRight={12} mt={6}>
                                 <MdAccessTime size="20px" />
                                 <Text>{formattedDate}</Text>
                             </HStack>
