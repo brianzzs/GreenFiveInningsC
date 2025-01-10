@@ -71,7 +71,6 @@ const StatsPage: React.FC = () => {
                 align="center"
                 w="100%"
                 p="1rem 2rem"
-                bg="#182223"
                 position="fixed"
                 top={0}
                 zIndex={100}

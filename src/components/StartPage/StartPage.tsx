@@ -27,7 +27,7 @@ const StartPage: React.FC = () => {
                 justify="space-between"
                 align="center"
                 p="1rem 2rem"
-                bg="#182223"
+                bg="#152643"
                 position="fixed"
                 top={0}
                 left={0}
@@ -59,25 +59,26 @@ const StartPage: React.FC = () => {
                 bottom={0}
                 zIndex={-2}
             />
-            <Grid templateColumns="repeat(12, 1fr)" gap={4} mt="4rem">
+            <Grid templateColumns="repeat(12, 1fr)" gap={4} mt="4rem" bgColor={"#253750"} fontFamily={"Poppins"} fontWeight={"400"}>
                 <GridItem colSpan={12} mt="4rem">
                     <VStack spacing={6} align="center" textAlign="center">
                         <Heading
                             as="h2"
                             fontSize={["2xl", "4xl", "6xl"]}
-                            color="white"
+                            color="#F3F4F6"
                             textAlign="center"
+                            mb={4}
                         >
-                            Unlock the Power of BETTING Data
+                            Unlock the Power of BETTING with Data!
                         </Heading>
-                        <Text color="white" fontSize={["md", "lg"]}>
+                        <Text color="#9CA3AF" fontSize={["md", "lg"]} mb={6}>
                             Our comprehensive statistics provide detailed insights for those
                             who love to bet on First 5 Innings including:
                         </Text>
                         <VStack align="flex-start" color="white" spacing={2}>
-                            <Text>- Over 1.5</Text>
-                            <Text>- Over 2.5</Text>
-                            <Text>- NRFI</Text>
+                            <Text>- Over 1.5 Runs</Text>
+                            <Text>- Over 2.5 Runs</Text>
+                            <Text>- No Run First Inning %</Text>
                             <Text>- First 5 Innings Money Line</Text>
                             <Text>
                                 - Game History for 5 innings up to the last{" "}
@@ -86,15 +87,16 @@ const StartPage: React.FC = () => {
                         </VStack>
                         <VStack spacing={4}>
                             <Text color="white" fontSize={["md", "lg"]}>
-                                Empower your decision-making with our data-driven approach.
-                                Ready to explore?
+                                Empower your betting decision-making with our data-driven approach.
+                                Ready to out-smart the bookies?
                             </Text>
                             <ChakraLink as={Link} to="/stats" textDecoration="none">
                                 <Button
-                                    bg="#00ce81"
-                                    _hover={{ bg: "#009e5c" }}
+                                    bg="#F59E0B"
+                                    _hover={{ bg: "#D97706", boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.2)" }}
                                     borderRadius="30px"
                                     size="lg"
+                                    color="white"
                                 >
                                     EXPLORE
                                 </Button>
@@ -110,7 +112,7 @@ const StartPage: React.FC = () => {
                         align="center"
                         overflowX="auto"
                         p="1rem"
-                        bg="#182223"
+                        bg="linear-gradient(135deg, #1E1E2F 0%, #2E3A59 100%)"
                     >
                         <TodaySchedule
                             placeholder={

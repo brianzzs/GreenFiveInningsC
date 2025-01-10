@@ -99,7 +99,7 @@ const TodaySchedule: React.FC<TodayScheduleProps> = ({ setIsLoading }) => {
     return (
         <div>
             <Box textAlign="center" mb={6}>
-                <Text fontSize="2xl" fontWeight="bold">
+                <Text fontSize="3xl" fontWeight="bold" color="white">
                     Next Scheduled Games
                 </Text>
             </Box>
