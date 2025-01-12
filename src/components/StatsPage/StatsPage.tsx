@@ -11,7 +11,7 @@ import {
     Text,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import axios from "axios"; 
+import axios from "axios";
 import TeamDropdown from "../TeamDropdown/TeamDropdown";
 import PeriodDropdown from "../SpanDropdown/SpanDropdown";
 import StatisticCard from "../StatisticsCard/StatisticsCard";
@@ -21,7 +21,7 @@ import NextScheduledGame from "../NextScheduledGame/NextScheduledGame";
 import FooterComponent from "../Footer/Footer";
 
 const StatsPage: React.FC = () => {
-    const [selectedTeam, setSelectedTeam] = useState<string>("");
+    const [selectedTeam, setSelectedTeam] = useState<number>(0);
     const [selectedPeriod, setSelectedPeriod] = useState<number>(10);
     const [results, setResults] = useState<any[]>([]);
     const [winPercentage, setWinPercentage] = useState<number | null>(null);
@@ -86,7 +86,6 @@ const StatsPage: React.FC = () => {
                 {selectedTeam && <TeamLogo teamId={selectedTeam} />}
                 <HStack spacing={4} justify="center">
                     <TeamDropdown
-                        label="Select a team"
                         selectedTeam={selectedTeam}
                         onTeamChange={setSelectedTeam}
                     />
@@ -130,7 +129,6 @@ const StatsPage: React.FC = () => {
                 </VStack>
             )}
 
-            {/* Footer */}
             {isDataAvailable && <FooterComponent isLoading={loading} />}
         </Flex>
     );

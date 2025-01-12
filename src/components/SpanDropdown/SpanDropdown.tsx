@@ -9,6 +9,7 @@ import { FormControl, FormLabel } from "@chakra-ui/react";
 
 interface SpanDropdownProps {
     onPeriodChange: (period: number) => void;
+    selectedPeriod: number;
 }
 
 const SpanDropdown: React.FC<SpanDropdownProps> = ({ onPeriodChange }) => {

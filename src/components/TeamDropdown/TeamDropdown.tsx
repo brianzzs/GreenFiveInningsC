@@ -9,15 +9,15 @@ import {
 import axios from "axios";
 
 interface TeamDropdownProps {
-  selectedTeam: string;
-  onTeamChange: (teamId: string) => void;
+  selectedTeam: number;
+  onTeamChange: (teamId: number) => void;
 }
 
 const TeamDropdown: React.FC<TeamDropdownProps> = ({
   selectedTeam,
   onTeamChange,
 }) => {
-  const [teams, setTeams] = useState<Record<string, string>>({});
+  const [teams, setTeams] = useState<Record<number, number>>({});
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -33,7 +33,7 @@ const TeamDropdown: React.FC<TeamDropdownProps> = ({
   }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onTeamChange(event.target.value);
+    onTeamChange(Number(event.target.value));
   };
 
   return (
