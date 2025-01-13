@@ -20,8 +20,8 @@ const StartPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     return (
-        <Box position="relative">
-
+        <Box position="relative" minHeight="100vh" bg="#253750">
+            {/* Header */}
             <Flex
                 as="nav"
                 justify="space-between"
@@ -47,6 +47,8 @@ const StartPage: React.FC = () => {
                     Statistics
                 </ChakraLink>
             </Flex>
+
+            {/* Background Image */}
             <Box
                 backgroundImage={`linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(${Bg})`}
                 backgroundSize="cover"
@@ -59,7 +61,17 @@ const StartPage: React.FC = () => {
                 bottom={0}
                 zIndex={-2}
             />
-            <Grid templateColumns="repeat(12, 1fr)" gap={4} mt="4rem" bgColor={"#253750"} fontFamily={"Poppins"} fontWeight={"400"}>
+
+            {/* Content */}
+            <Grid
+                templateColumns="repeat(12, 1fr)"
+                gap={4}
+                mt="4rem"
+                fontFamily="Poppins"
+                fontWeight="400"
+                pb="60px" /* Add padding to prevent overlap with footer */
+            >
+                {/* Hero Section */}
                 <GridItem colSpan={12} mt="4rem">
                     <VStack spacing={6} align="center" textAlign="center">
                         <Heading
@@ -87,13 +99,16 @@ const StartPage: React.FC = () => {
                         </VStack>
                         <VStack spacing={4}>
                             <Text color="white" fontSize={["md", "lg"]}>
-                                Empower your betting decision-making with our data-driven approach.
-                                Ready to out-smart the bookies?
+                                Empower your betting decision-making with our data-driven
+                                approach. Ready to out-smart the bookies?
                             </Text>
                             <ChakraLink as={Link} to="/stats" textDecoration="none">
                                 <Button
                                     bg="#F59E0B"
-                                    _hover={{ bg: "#D97706", boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.2)" }}
+                                    _hover={{
+                                        bg: "#D97706",
+                                        boxShadow: "0px 10px 15px rgba(0, 0, 0, 0.2)",
+                                    }}
                                     borderRadius="30px"
                                     size="lg"
                                     color="white"
@@ -132,8 +147,8 @@ const StartPage: React.FC = () => {
                     </Flex>
                 </GridItem>
             </Grid>
-            <FooterComponent isLoading={isLoading} />
 
+            <FooterComponent isLoading={isLoading} />
         </Box>
     );
 };

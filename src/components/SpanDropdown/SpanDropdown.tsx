@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-    Box,
-    Select,
-} from "@chakra-ui/react";
-
-import { FormControl, FormLabel } from "@chakra-ui/react";
-
+import { Box, Select, FormControl, FormLabel } from "@chakra-ui/react";
 
 interface SpanDropdownProps {
     onPeriodChange: (period: number) => void;
@@ -24,17 +18,22 @@ const SpanDropdown: React.FC<SpanDropdownProps> = ({ onPeriodChange }) => {
     const periods = [5, 10, 15, 20, 25, 30];
 
     return (
-        <Box width="20%">
+        <Box width="100%">
             <FormControl id="period-select" isRequired>
-                <FormLabel>Last Days</FormLabel>
+                <FormLabel fontWeight="bold" color="teal.600">
+                    Select Period
+                </FormLabel>
                 <Select
                     value={selectedPeriod}
                     onChange={handlePeriodChange}
                     bg="white"
-                    focusBorderColor="teal.500">
+                    focusBorderColor="teal.500"
+                    borderRadius="md"
+                    shadow="sm"
+                >
                     {periods.map((period) => (
                         <option key={period} value={period}>
-                            {period}
+                            Last {period} Days
                         </option>
                     ))}
                 </Select>

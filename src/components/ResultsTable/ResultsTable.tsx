@@ -36,8 +36,8 @@ interface ResultsTableProps {
     selectedPeriod: number;
 }
 
-const getTextColor = (condition: boolean): string =>
-    condition ? "lime" : condition === false ? "red" : "white";
+const getTextColor = (isWinning: boolean): string =>
+    isWinning ? "#02ff4d" : "#ff2102";
 
 const ResultsTable: React.FC<ResultsTableProps> = ({
     data,
@@ -48,103 +48,121 @@ const ResultsTable: React.FC<ResultsTableProps> = ({
     const isDataAvailable = data && data.length > 0;
 
     return (
-        <Grid templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} gap={4}>
-            {isDataAvailable && (
-                <GridItem colSpan={12}>
-                    <Text
-                        fontSize="lg"
-                        fontWeight="bold"
-                        textAlign="center"
-                        mb={4}
-                        color="white"
-                    >
-                        Last {selectedPeriod} Days First 5 Innings Game Log
-                    </Text>
-                </GridItem>
+        <Box p={6} bg="gray.900" borderRadius="md" boxShadow="lg">
+            {isDataAvailable ? (
+                <Text
+                    fontSize="xl"
+                    fontWeight="bold"
+                    textAlign="center"
+                    mb={6}
+                    color="white"
+                >
+                    Last {selectedPeriod} Days First 5 Innings Game Log
+                </Text>
+            ) : (
+                <Text fontSize="lg" fontWeight="bold" textAlign="center" color="gray.300">
+                    No data available for the selected period.
+                </Text>
             )}
 
-            {reversedData.map((game, index) => (
-                <Card key={index} bg="#004736" color="white">
-                    <CardHeader fontSize="lg" fontWeight="bold" textAlign="center">
-                        Game {index + 1}
-                    </CardHeader>
-                    <CardBody>
-                        <TableContainer>
-                            <Table variant="simple">
-                                <Thead>
-                                    <Tr>
-                                        <Th color="white" py={2}>
-                                            Teams
-                                        </Th>
-                                        {[...Array(5)].map((_, inning) => (
-                                            <Th key={inning} color="white" py={2}>
-                                                {inning + 1}
+            <Grid
+                templateColumns={{
+                    base: "1fr",
+                    sm: "repeat(2, 1fr)",
+                    lg: "repeat(2, 1fr)",
+                }}
+                gap={6}
+            >
+                {reversedData.map((game, index) => (
+                    <Card key={index} bg="gray.800" color="white" borderRadius="md" boxShadow="md">
+                        <CardHeader
+                            fontSize="lg"
+                            fontWeight="bold"
+                            textAlign="center"
+                            bg="gray.700"
+                            borderTopRadius="md"
+                            p={3}
+                            borderBottom="1px solid white"
+                        >
+                            Game {index + 1}
+                        </CardHeader>
+                        <CardBody>
+                            <TableContainer>
+                                <Table variant="unstyled" size="sm">
+                                    <Thead>
+                                        <Tr>
+                                            <Th color="gray.300" textAlign="left">
+                                                Teams
                                             </Th>
-                                        ))}
-                                        <Th color="white" py={2}>
-                                            Total
-                                        </Th>
-                                    </Tr>
-                                </Thead>
-                                <Tbody>
-                                    {/* Away Team Row */}
-                                    <Tr>
-                                        <Td
-                                            fontWeight="bold"
-                                            color={
-                                                displayedTeamId === game.away_team.id
-                                                    ? "#ffa000"
-                                                    : "white"
-                                            }
-                                        >
-                                            {game.away_team.name}
-                                            <br />
-                                            ({game.away_team.probable_pitcher.name})
-                                        </Td>
-                                        {game.away_team.runs.map((runs, inning) => (
-                                            <Td key={inning} color="white">
-                                                {runs}
+                                            {[...Array(5)].map((_, inning) => (
+                                                <Th key={inning} color="gray.300" textAlign="center">
+                                                    {inning + 1}
+                                                </Th>
+                                            ))}
+                                            <Th color="gray.300" textAlign="center">
+                                                Total
+                                            </Th>
+                                        </Tr>
+                                    </Thead>
+                                    <Tbody>
+                                        <Tr>
+                                            <Td
+                                                fontWeight="bold"
+                                                color={displayedTeamId === game.away_team.id ? "#ffa000" : "white"}
+                                            >
+                                                {game.away_team.name}
+                                                <Text as="span" fontSize="sm" color="gray.400">
+                                                    ({game.away_team.probable_pitcher.name})
+                                                </Text>
                                             </Td>
-                                        ))}
-                                        <Td color={getTextColor(
-                                            game.away_team.total_runs > game.home_team.total_runs
-                                        )}>
-                                            {game.away_team.total_runs}
-                                        </Td>
-                                    </Tr>
-
-                                    {/* Home Team Row */}
-                                    <Tr>
-                                        <Td
-                                            fontWeight="bold"
-                                            color={
-                                                displayedTeamId === game.home_team.id
-                                                    ? "#ffa000"
-                                                    : "white"
-                                            }
-                                        >
-                                            {game.home_team.name}
-                                            <br />
-                                            ({game.home_team.probable_pitcher.name})
-                                        </Td>
-                                        {game.home_team.runs.map((runs, inning) => (
-                                            <Td key={inning} color="white">
-                                                {runs}
+                                            {game.away_team.runs.map((runs, inning) => (
+                                                <Td key={inning} textAlign="center" color="gray.200">
+                                                    {runs}
+                                                </Td>
+                                            ))}
+                                            <Td
+                                                textAlign="center"
+                                                fontWeight="bold"
+                                                color={getTextColor(
+                                                    game.away_team.total_runs > game.home_team.total_runs
+                                                )}
+                                            >
+                                                {game.away_team.total_runs}
                                             </Td>
-                                        ))}
-                                        <Td color={getTextColor(
-                                            game.home_team.total_runs > game.away_team.total_runs
-                                        )}>
-                                            {game.home_team.total_runs}
-                                        </Td>
-                                    </Tr>
-                                </Tbody>
-                            </Table>
-                        </TableContainer>
-                    </CardBody>
-                </Card>
-            ))}
-        </Grid>
+                                        </Tr>
+                                        <Tr>
+                                            <Td
+                                                fontWeight="bold"
+                                                color={displayedTeamId === game.home_team.id ? "#ffa000" : "white"}
+                                            >
+                                                {game.home_team.name}
+                                                <Text as="span" fontSize="sm" color="gray.400">
+                                                    ({game.home_team.probable_pitcher.name})
+                                                </Text>
+                                            </Td>
+                                            {game.home_team.runs.map((runs, inning) => (
+                                                <Td key={inning} textAlign="center" color="gray.200">
+                                                    {runs}
+                                                </Td>
+                                            ))}
+                                            <Td
+                                                textAlign="center"
+                                                fontWeight="bold"
+                                                color={getTextColor(
+                                                    game.home_team.total_runs > game.away_team.total_runs
+                                                )}
+                                            >
+                                                {game.home_team.total_runs}
+                                            </Td>
+                                        </Tr>
+                                    </Tbody>
+                                </Table>
+                            </TableContainer>
+                        </CardBody>
+                    </Card>
+                ))}
+            </Grid>
+        </Box>
     );
 };
 

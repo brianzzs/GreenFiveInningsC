@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import {
     Box,
     Button,
-    CircularProgress,
     Flex,
-    Grid,
     Heading,
     VStack,
     HStack,
-    Text,
+    SimpleGrid,
+    Divider,
+    Spinner,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -17,7 +17,6 @@ import PeriodDropdown from "../SpanDropdown/SpanDropdown";
 import StatisticCard from "../StatisticsCard/StatisticsCard";
 import TeamLogo from "../TeamLogo/TeamLogo";
 import ResultsTable from "../ResultsTable/ResultsTable";
-import NextScheduledGame from "../NextScheduledGame/NextScheduledGame";
 import FooterComponent from "../Footer/Footer";
 
 const StatsPage: React.FC = () => {
@@ -29,7 +28,6 @@ const StatsPage: React.FC = () => {
     const [over1_5F5, setOver1_5F5] = useState<number | null>(null);
     const [over2_5F5, setOver2_5F5] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [fetchGame, setFetchGame] = useState<boolean>(false);
 
     const handleCalculate = async () => {
         setLoading(true);
@@ -45,16 +43,11 @@ const StatsPage: React.FC = () => {
             setNrfi(nrfi);
             setOver1_5F5(over1_5F5);
             setOver2_5F5(over2_5F5);
-            setFetchGame(true);
         } catch (error) {
             console.error("Error fetching stats:", error);
         } finally {
             setLoading(false);
         }
-    };
-
-    const onFetchComplete = () => {
-        setFetchGame(false);
     };
 
     const isDataAvailable =
@@ -64,71 +57,117 @@ const StatsPage: React.FC = () => {
         nrfi !== null;
 
     return (
-        <Flex direction="column" minHeight="100vh" alignItems="center" bg="#2c323a">
+        <Flex
+            direction="column"
+            minHeight="100vh"
+            width="100vw" 
+            bg="#1a202c"
+        >
             <Flex
-                as="nav"
+                as="header"
                 justify="space-between"
                 align="center"
-                w="100%"
-                p="1rem 2rem"
+                w="100%" 
+                px={8}
+                py={4}
+                bg="teal.600"
+                color="white"
+                shadow="md"
                 position="fixed"
-                top={0}
                 zIndex={100}
             >
                 <Link to="/">
-                    <Heading as="h1" size="lg" color="white">
+                    <Heading as="h1" size="lg" fontWeight="bold">
                         Five Innings Friend
                     </Heading>
                 </Link>
             </Flex>
-
-            <VStack spacing={4} mt="6rem" w="100%" bg="#faf9f9" p="1rem">
-                {selectedTeam && <TeamLogo teamId={selectedTeam} />}
-                <HStack spacing={4} justify="center">
-                    <TeamDropdown
-                        selectedTeam={selectedTeam}
-                        onTeamChange={setSelectedTeam}
-                    />
-                    <PeriodDropdown
-                        selectedPeriod={selectedPeriod}
-                        onPeriodChange={setSelectedPeriod}
-                    />
-                </HStack>
-                <Button
-                    isLoading={loading}
-                    loadingText="Loading"
-                    bg="#00ce81"
-                    color="white"
-                    _hover={{ bg: "#009e5c" }}
-                    borderRadius="20px"
-                    onClick={handleCalculate}
-                    isDisabled={!selectedTeam}
+            <Flex
+                direction="column"
+                align="center"
+                mt="6rem"
+                px={4}
+                w="100%"
+            >
+                <VStack
+                    spacing={4}
+                    align="center"
+                    bg="gray.100"
+                    p={6}
+                    borderRadius="lg"
+                    shadow="lg"
+                    width={["95%", "80%", "60%"]}
                 >
-                    Get Stats
-                </Button>
-            </VStack>
-
-            {isDataAvailable && (
-                <VStack spacing={6} mt={4} w="100%" p="2rem" bg="#2c323a">
-                    <Flex wrap="wrap" justify="center" gap={4}>
-                        <StatisticCard id="win-percentage-card" label="ML F5" data={winPercentage} />
-                        <StatisticCard id="nrfi-card" label="NRFI" data={nrfi} />
-                        <StatisticCard id="over1-5f5-card" label="Over 1.5 F5 TT" data={over1_5F5} />
-                        <StatisticCard id="over2-5f5-card" label="Over 2.5 F5 TT" data={over2_5F5} />
-                    </Flex>
-                    <NextScheduledGame
-                        fetchGame={fetchGame}
-                        teamId={selectedTeam}
-                        onFetchComplete={onFetchComplete}
-                    />
-                    <ResultsTable
-                        data={results}
-                        displayedTeamId={selectedTeam}
-                        selectedPeriod={selectedPeriod}
-                    />
+                    {selectedTeam && <TeamLogo teamId={selectedTeam} />}
+                    <HStack spacing={4}>
+                        <TeamDropdown
+                            selectedTeam={selectedTeam}
+                            onTeamChange={setSelectedTeam}
+                        />
+                        <PeriodDropdown
+                            selectedPeriod={selectedPeriod}
+                            onPeriodChange={setSelectedPeriod}
+                        />
+                    </HStack>
+                    <Button
+                        isLoading={loading}
+                        loadingText="Calculating"
+                        bg="teal.500"
+                        color="white"
+                        _hover={{ bg: "teal.600" }}
+                        borderRadius="full"
+                        onClick={handleCalculate}
+                        isDisabled={!selectedTeam}
+                        px={6}
+                        fontWeight="bold"
+                    >
+                        Get Stats
+                    </Button>
                 </VStack>
-            )}
 
+                {loading && (
+                    <Flex justify="center" align="center" height="50vh" width="100%">
+                        <Spinner size="xl" color="teal.500" />
+                    </Flex>
+                )}
+
+                {isDataAvailable && (
+                    <>
+                        {/* Statistics Cards */}
+                        <SimpleGrid
+                            columns={[1, 2, 4]}
+                            spacing={6}
+                            mt={6}
+                            width="100%" /* Full width */
+                            px={[4, 8, 16]} /* Responsive padding */
+                        >
+                            <StatisticCard id="win-percentage-card" label="ML F5" data={winPercentage} />
+                            <StatisticCard id="nrfi-card" label="NRFI" data={nrfi} />
+                            <StatisticCard id="over1-5f5-card" label="Over 1.5 F5 TT" data={over1_5F5} />
+                            <StatisticCard id="over2-5f5-card" label="Over 2.5 F5 TT" data={over2_5F5} />
+                        </SimpleGrid>
+
+                        <Divider my={6} />
+
+                        {/* Results Table */}
+                        <Box
+                            bg="gray.800"
+                            p={6}
+                            borderRadius="lg"
+                            shadow="lg"
+                            width={["95%", "90%", "80%"]} /* Responsive table width */
+                        >
+                            <ResultsTable
+                                data={results}
+                                displayedTeamId={selectedTeam}
+                                selectedPeriod={selectedPeriod}
+                            />
+                        </Box>
+                    </>
+                )}
+            </Flex>
+
+            {/* Footer */}
             {isDataAvailable && <FooterComponent isLoading={loading} />}
         </Flex>
     );
